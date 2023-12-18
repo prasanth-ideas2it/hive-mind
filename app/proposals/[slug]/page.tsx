@@ -2,7 +2,7 @@ import ActiveProposal from "@/components/pages/proposals/active-proposals/active
 import PastProposal from "@/components/pages/proposals/past-proposals/past-proposal";
 import { redirect } from "next/navigation";
 
-export async function getProposal() {
+async function getProposal() {
   return {
     type: "past-proposal",
   };
