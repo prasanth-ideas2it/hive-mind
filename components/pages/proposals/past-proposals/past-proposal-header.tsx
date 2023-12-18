@@ -3,10 +3,10 @@
 import IconButton from "@/components/ui/icon-button";
 import { useRouter } from "next/navigation";
 
-const ActiveProposalHeader = () => {
+const PastProposalHeader = () => {
   const router = useRouter();
   const onChangeRoute = () => {
-    router.push("/active-proposals");
+    router.push("/proposals/?type=past-proposals");
   };
   return (
     <>
@@ -71,4 +71,4 @@ const ActiveProposalHeader = () => {
   );
 };
 
-export default ActiveProposalHeader;
+export default PastProposalHeader;

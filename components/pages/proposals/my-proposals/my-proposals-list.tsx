@@ -1,16 +1,9 @@
 "use client";
 
-import CreateProposal from "@/components/ui/create-proposal";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const MyProposalsList = () => {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
-
-  const onNavigateToProposal = () => {
-    router.push("/my-proposals/1");
-  };
 
   const onOpenModal = () => {
     document.dispatchEvent(
@@ -37,7 +30,6 @@ const MyProposalsList = () => {
             <div
               key={`proposal-${index}`}
               className="flex items-center px-[16px] w-full bg-slate-50 rounded-lg h-[64px] cursor-pointer"
-              onClick={onNavigateToProposal}
             >
               <div className="flex items-center justify-between w-full">
                 <div className="flex gap-2 items-center">

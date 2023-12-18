@@ -1,9 +1,30 @@
 "use client";
 import { navItems } from "@/utils/constants";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 function NavLinks() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const type = searchParams.get("type");
+
+  const updateSearchParams = (type: any, value: any) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (!value) {
+      current.delete(type);
+    } else {
+      current.set(type, value);
+    }
+    const search = current.toString();
+    const query = search ? `?${search}` : "";
+    const path = pathname.replace(/\/proposals\/.*/, "/proposals");
+    router.replace(`${path}${query}`);
+  };
+
+  // useEffect(() => {
+  //   updateSearchParams("proposal", "active-proposals");
+  // }, []);
+
   return (
     <>
       <ul className="flex gap-4 items-center">
@@ -11,18 +32,22 @@ function NavLinks() {
           <li
             key={`app-nav-${navItem.key}`}
             className={`${
-              pathname === navItem.url || pathname.includes(navItem.key)
+              type === navItem.key ||
+              (!type && navItem.key === "active-proposals")
                 ? "border-b-2 border-[#FF8343]"
                 : ""
             } h-[36px] px-[12px] py-[8px]`}
           >
-            <Link href={navItem.url}>
+            <div
+              className="cursor-pointer"
+              onClick={() => updateSearchParams("type", navItem.key)}
+            >
               <p
                 className={`text-[14px] font-medium text-[#FFFFFF] text-center leading-5`}
               >
                 {navItem.name}
               </p>
-            </Link>
+            </div>
           </li>
         ))}
       </ul>

@@ -1,12 +1,29 @@
 "use client";
-import { useState } from "react";
-import Description from "@/components/pages/active-proposals/description";
-import Results from "@/components/pages/active-proposals/results";
-import Voters from "@/components/pages/active-proposals/voters";
-import ActiveProposalHeader from "@/components/pages/active-proposals/active-proposal-header";
 
-const Proposal = () => {
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { updateSearchParams } from "@/utils/helper";
+import ActiveProposalHeader from "./active-proposal-header";
+import Description from "../common/description";
+import Results from "../common/results";
+import Voters from "../common/voters";
+
+const ActiveProposal = () => {
   const [show, setShow] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    updateSearchParams(
+      router,
+      searchParams,
+      pathname,
+      "type",
+      "active-proposals"
+    );
+  }, []);
+
   return (
     <div className="flex flex-col gap-[20px] pb-[20px]">
       <div>
@@ -81,4 +98,4 @@ const Proposal = () => {
   );
 };
 
-export default Proposal;
+export default ActiveProposal;
