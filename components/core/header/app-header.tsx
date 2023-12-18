@@ -1,3 +1,4 @@
+import { useRouter, useSearchParams } from "next/navigation";
 import NavLinks from "./navlinks";
 
 const AppHeader = () => {
