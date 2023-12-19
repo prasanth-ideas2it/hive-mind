@@ -1,6 +1,8 @@
+"use client"
 import ActiveProposalList from "@/components/pages/proposals/active-proposals/active-proposal-list";
 import MyProposalsList from "@/components/pages/proposals/my-proposals/my-proposals-list";
 import PastProposalsList from "@/components/pages/proposals/past-proposals/past-proposals-list";
+// import ProtectedRoute from "@/hoc/protectedRoute";
 
 const Home = (props: any) => {
   const { searchParams } = props;

@@ -1,7 +1,26 @@
+import { useContext } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { UserContext, USERACTION_TYPES } from '@/context/user-context'
 import NavLinks from "./navlinks";
+import { magicLogout } from "@/lib/magic";
 
 const AppHeader = () => {
+  const {user, dispatch} = useContext(UserContext)
+  console.log("user>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", user);
+
+  const handleLogoutButtonClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    try {
+      await magicLogout()
+      dispatch({
+         type: USERACTION_TYPES.LOG_OUT,
+         user: null
+      })
+    } catch (error) {
+        console.log(error)
+    }
+ }
+
   return (
     <div className="py-[20px] px-[48px]">
       <div className="flex h-[44px] items-center justify-between">
@@ -43,10 +62,11 @@ const AppHeader = () => {
                 alt="down arrow"
               />
               <span className="text-xs text-white leading-6 font-[500]">
-                0x282...E8D1
+                {/* 0x282...E8D1 */}
+                {user?.wallet}
               </span>
             </button>
-            <button className="px-[7px] h-full flex items-center bg-opacity-30 bg-[#FFFFFF33] rounded-r">
+            <button className="px-[7px] h-full flex items-center bg-opacity-30 bg-[#FFFFFF33] rounded-r" onClick={handleLogoutButtonClicked}>
               <img src="/assets/icons/logout.svg" alt="icon" />
             </button>
           </div>

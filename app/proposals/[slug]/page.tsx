@@ -1,6 +1,7 @@
 import ActiveProposal from "@/components/pages/proposals/active-proposals/active-proposal";
 import PastProposal from "@/components/pages/proposals/past-proposals/past-proposal";
 import { redirect } from "next/navigation";
+// import ProtectedRoute from "@/hoc/protectedRoute";
 
 async function getProposal() {
   return {
