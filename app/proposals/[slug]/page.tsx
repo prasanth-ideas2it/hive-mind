@@ -1,24 +1,71 @@
 import ActiveProposal from "@/components/pages/proposals/active-proposals/active-proposal";
 import PastProposal from "@/components/pages/proposals/past-proposals/past-proposal";
+import {
+  getProposalById,
+  getVoteDetailsByProposal,
+} from "@/services/proposals.service";
 import { redirect } from "next/navigation";
 // import ProtectedRoute from "@/hoc/protectedRoute";
 
-async function getProposal() {
-  return {
-    type: "past-proposal",
-  };
+// async function getProposal() {
+//   return {
+//     type: "past-proposal",
+//   };
+// }
+
+async function getProposal(id: string) {
+  try {
+    const result = await getProposalById(id);
+    if (result.status == 200) {
+      return {
+        data: await result.json(),
+      };
+    } else {
+      return {
+        data: {},
+      };
+    }
+  } catch (err) {
+    return {
+      data: {},
+    };
+  }
+}
+
+async function getVoters(id: string) {
+  try {
+    const result = await getVoteDetailsByProposal(id);
+    if (result.status == 200) {
+      return {
+        data: await result.json(),
+      };
+    } else {
+      return {
+        data: {},
+      };
+    }
+  } catch (err) {
+    return {
+      data: {},
+    };
+  }
 }
 
 const Proposal = async (props: any) => {
   const { params } = props;
-  const proposal = (await getProposal()) as any;
+  // const proposal = (await getProposal()) as any;
 
-  const type = proposal.type;
+  const { data } = await getProposal("3");
+  const { data: voters } = await getVoters("3");
+
+  console.log("ddd", voters);
+
+  const type = "active-proposal";
 
   return (
     <div>
       {type === "active-proposal" && <ActiveProposal />}
-      {type === "past-proposal" && <PastProposal />}
+      {/* {type === "past-proposal" && <PastProposal />} */}
     </div>
   );
 };

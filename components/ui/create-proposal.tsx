@@ -9,16 +9,39 @@ const CreateProposal = () => {
     { id: 1, name: "organization" },
     { id: 2, name: "payroll" },
   ];
+
+  const timeOptions = [
+    {
+      id: 1,
+      name: "5minutes",
+      value: new Date(new Date().getTime() + 5 * 60000).getTime(),
+    },
+    {
+      id: 2,
+      name: "10 minutes",
+      value: new Date(new Date().getTime() + 10 * 60000).getTime(),
+    },
+    {
+      id: 3,
+      name: "1 Week",
+      value: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000).getTime(),
+    },
+  ];
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const menuRef = useRef(null);
 
+  const [isTimeOpen, setIsTimeOpen] = useState(false);
+
   const [proposalData, setProposalData] = useState<any>({
     title: "",
     category: "",
+    time: "",
     options: [{ option: "" }],
     description: "",
   });
+
+  console.log(proposalData);
 
   useEffect(() => {
     function handler(e: any) {
@@ -87,7 +110,7 @@ const CreateProposal = () => {
                         Proposal Title
                       </label>
                       <input
-                        className="text-sm border border-[#CBD5E1] px-[12px] py-[8px] w-full rounded-lg placeholder:text-sm leading-6 font-[500] focus:outline-0"
+                        className="text-sm text-[#475569] border border-[#CBD5E1] px-[12px] py-[8px] w-full rounded-lg placeholder:text-sm leading-6 font-[500] focus:outline-0"
                         placeholder="Enter Propsal Title Here"
                         value={proposalData?.title}
                         onChange={(e) =>
@@ -99,25 +122,48 @@ const CreateProposal = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-[12px]">
-                      <label className="font-semibold text-sm text-[#0F172A]">
-                        Select Category
-                      </label>
-                      <SingleSelect
-                        placeholder="Select Category"
-                        selectedValue={proposalData?.category}
-                        options={options}
-                        isOpen={isOpen}
-                        setIsOpen={setIsOpen}
-                        searchValue={searchValue}
-                        setSearchValue={setSearchValue}
-                        menuRef={menuRef}
-                        onChange={(option: string) =>
-                          setProposalData({
-                            ...proposalData,
-                            category: option,
-                          })
-                        }
-                      />
+                      <div>
+                        <label className="font-semibold text-sm text-[#0F172A]">
+                          Select Category
+                        </label>
+                        <SingleSelect
+                          placeholder="Select Category"
+                          selectedValue={proposalData?.category}
+                          options={options}
+                          isOpen={isTimeOpen}
+                          setIsOpen={setIsTimeOpen}
+                          searchValue={searchValue}
+                          setSearchValue={setSearchValue}
+                          menuRef={menuRef}
+                          onChange={(option: string) =>
+                            setProposalData({
+                              ...proposalData,
+                              category: option,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="font-semibold text-sm text-[#0F172A]">
+                          Duration
+                        </label>
+                        <SingleSelect
+                          placeholder="Select duration"
+                          selectedValue={proposalData?.time}
+                          options={timeOptions}
+                          isOpen={isOpen}
+                          setIsOpen={setIsOpen}
+                          searchValue={searchValue}
+                          setSearchValue={setSearchValue}
+                          menuRef={menuRef}
+                          onChange={(option: string) =>
+                            setProposalData({
+                              ...proposalData,
+                              time: option,
+                            })
+                          }
+                        />
+                      </div>
                     </div>
                     <div className="flex flex-col gap-[12px]">
                       <label className="font-semibold text-sm text-[#0F172A]">
@@ -132,7 +178,7 @@ const CreateProposal = () => {
                                 className="flex items-center justify-between"
                               >
                                 <input
-                                  className="text-sm border border-[#CBD5E1] px-[12px] py-[8px] w-[486px] rounded-lg placeholder:text-sm leading-6 font-[500] focus:outline-0"
+                                  className="text-sm border text-[#475569] border-[#CBD5E1] px-[12px] py-[8px] w-[486px] rounded-lg placeholder:text-sm leading-6 font-[500] focus:outline-0"
                                   //   placeholder="Enter Propsal Title Here"
                                   value={item.option}
                                   onChange={(e) =>

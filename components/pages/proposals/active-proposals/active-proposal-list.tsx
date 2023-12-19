@@ -5,49 +5,51 @@ import { useRouter } from "next/navigation";
 
 import Web3 from "web3";
 import { magicSign } from "@/lib/magic";
-import { recoverPersonalSignature, recoverTypedSignature } from "@metamask/eth-sig-util";
+import {
+  recoverPersonalSignature,
+  recoverTypedSignature,
+} from "@metamask/eth-sig-util";
 
 export const signTypedDataV3Payload = {
-  "types": {
-    "EIP712Domain": [
+  types: {
+    EIP712Domain: [
       {
-        "name": "name",
-        "type": "string"
+        name: "name",
+        type: "string",
       },
       {
-        "name": "version",
-        "type": "string"
+        name: "version",
+        type: "string",
       },
       {
-        "name": "verifyingContract",
-        "type": "address"
-      }
+        name: "verifyingContract",
+        type: "address",
+      },
     ],
-    "Proposal": {
-      "name": "title",
-      "type": "string"
+    Proposal: {
+      name: "title",
+      type: "string",
     },
-    "Vote": {
-      "user": {
-        "type": "address"
+    Vote: {
+      user: {
+        type: "address",
       },
-      "choice": {
-        "type": "string"
-      }
-    }
+      choice: {
+        type: "string",
+      },
+    },
   },
-  "primaryType": "Vote",
-  "domain": {
-    "name": "hive-mind",
-    "version": "1",
-    "verifyingContract": "0xbaf289a8c7a9809e13ac81dc073bd10e051de1df"
+  primaryType: "Vote",
+  domain: {
+    name: "hive-mind",
+    version: "1",
+    verifyingContract: "0xbaf289a8c7a9809e13ac81dc073bd10e051de1df",
   },
-  "message": {
-    "user": "0xABCDEFabcdef1234567890abcdef1234567890",
-    "choice": "Yes"
-  }
-}
-
+  message: {
+    user: "0xABCDEFabcdef1234567890abcdef1234567890",
+    choice: "Yes",
+  },
+};
 
 export const signTypedDataV4Payload = {
   domain: {
@@ -85,15 +87,25 @@ export const signTypedDataV4Payload = {
   },
 };
 
-const ActiveProposalList = () => {
+const ActiveProposalList = (props: any) => {
   const router = useRouter();
+
+  const onVote = () => {
+    router.push("/proposals/1");
+  };
+
+  const onOpenModal = () => {
+    document.dispatchEvent(
+      new CustomEvent("showModal", { detail: { type: "create-proposal" } })
+    );
+  };
 
   const onSign = async () => {
     const provider = await magicSign.wallet.getProvider();
     const web3 = new Web3(provider);
     const account = await magicSign.wallet.connectWithUI();
     try {
-  // Personal sign code -- starts
+      // Personal sign code -- starts
       const signedMessage = await web3.eth.personal.sign(
         "Here is a basic message!",
         account[0],
@@ -109,11 +121,11 @@ const ActiveProposalList = () => {
           ? "Signing success!"
           : "Signing failed!"
       );
-    // personal sign code -- end
+      // personal sign code -- end
 
       // v4 code -- starts
       // const payload = signTypedDataV3Payload; // or signTypedDataV4Payload
-  
+
       // const params = [account[0], payload];
       // const method = "eth_signTypedData";
       // const signature = await magicSign?.rpcProvider.request({
@@ -121,11 +133,10 @@ const ActiveProposalList = () => {
       //   params,
       // });
       // console.log("Signature:", signature);
-     // v4 code -- ends
+      // v4 code -- ends
 
-     alert("Data signed successfully!");
-
-    } catch (error:any) {
+      alert("Data signed successfully!");
+    } catch (error: any) {
       console.error("Signing error:", error);
       if (error.message.includes("User denied signing")) {
         alert("You declined to sign the data. Please try again.");
@@ -133,16 +144,6 @@ const ActiveProposalList = () => {
         alert("An error occurred during signing. Please try again later.");
       }
     }
-  };
-
-  const onVote = () => {
-    router.push("/proposals/1");
-  };
-
-  const onOpenModal = () => {
-    document.dispatchEvent(
-      new CustomEvent("showModal", { detail: { type: "create-proposal" } })
-    );
   };
 
   return (

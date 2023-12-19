@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-const MyProposalsList = () => {
+const MyProposalsList = ({ data }: any) => {
+  console.log("my", data);
   const [open, setOpen] = useState(false);
 
   const onOpenModal = () => {
