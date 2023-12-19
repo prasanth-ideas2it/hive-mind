@@ -68,13 +68,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-[url('/images/login_bg_2x.png')] bg-no-repeat bg-cover">
+    <div className="flex flex-col items-center justify-center h-screen bg-[url('/assets/images/login_bg_2x.png')] bg-no-repeat bg-cover">
       <div className="">
         <h2 className="text-[32px] leading-[28px] text-white text-center font-extrabold">Welcome to HiveMind</h2>
         <h4 className="text-center text-[16px] leading-[24px] text-white font-medium">Shaping Tomorrow Together</h4>
         <div className="bg-white rounded-lg w-[400px] mx-auto py-[32px] mt-[32px]">
           <div className="flex items-center justify-center gap-2">
-            <img src="/icons/hive_mind_logo.svg" alt="logo" />
+            <img src="/assets/images/logo.svg" alt="logo" />
             <p className=" text-[26px] leading-[19px] font-semibold">
               Hive<span className="text-[#FF6B00]">Mind</span>
             </p>
