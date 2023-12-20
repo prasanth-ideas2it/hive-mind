@@ -1,6 +1,19 @@
 import ProgressBar from "@/components/ui/progress-bar";
 
-const Results = ({ title, votedOption, proposalType, status }: any) => {
+const Results = ({ title, votedOption, proposalType, status, votes }: any) => {
+  const { againstVotes, forVotes, abstainVotes } = votes;
+
+  const againstVotesNum = parseInt(againstVotes, 10);
+  const forVotesNum = parseInt(forVotes, 10);
+  const abstainVotesNum = parseInt(abstainVotes, 10);
+
+  // Calculate total votes
+  const totalVotes = againstVotesNum + forVotesNum + abstainVotesNum;
+
+  // Calculate percentages
+  const againstPercentage = (againstVotesNum / totalVotes) * 100;
+  const forPercentage = (forVotesNum / totalVotes) * 100;
+  const abstainPercentage = (abstainVotesNum / totalVotes) * 100;
   return (
     <div className="border-4 border-[#C0D7DC69] rounded-xl bg-white px-[24px] pt-[12px] pb-[24px] flex flex-col gap-[10px]">
       <h1 className="text-sm text-black font-[500] py-2">{title}</h1>
@@ -66,44 +79,44 @@ const Results = ({ title, votedOption, proposalType, status }: any) => {
       <div className="flex flex-col gap-[10px]">
         <div className="flex flex-col gap-2 py-2">
           <div className="flex items-center justify-between">
+            <span className="text-[#0F172A] text-sm font-[500]">Yes</span>
             <span className="text-[#0F172A] text-sm font-[500]">
-              Yes, full-time
+              {`${forPercentage}%`}
             </span>
-            <span className="text-[#0F172A] text-sm font-[500]">92.46%</span>
           </div>
           <ProgressBar
             height="10px"
             bgColor="#EDEDED"
             barColor="#00BC56"
-            percentage="92.46%"
+            percentage={forPercentage}
           />
         </div>
         <div className="flex flex-col gap-2 py-2">
           <div className="flex items-center justify-between">
+            <span className="text-[#0F172A] text-sm font-[500]">No</span>
             <span className="text-[#0F172A] text-sm font-[500]">
-              Yes, part-time
+              {`${againstPercentage}%`}
             </span>
-            <span className="text-[#0F172A] text-sm font-[500]">7.54%</span>
           </div>
           <ProgressBar
             height="10px"
             bgColor="#EDEDED"
             barColor="#FFAA5B"
-            percentage="7.54%"
+            percentage={againstPercentage}
           />
         </div>
         <div className="flex flex-col gap-2 py-2">
           <div className="flex items-center justify-between">
+            <span className="text-[#0F172A] text-sm font-[500]">Abstain</span>
             <span className="text-[#0F172A] text-sm font-[500]">
-              No, prefer in-office only
+              {`${abstainPercentage}%`}
             </span>
-            <span className="text-[#0F172A] text-sm font-[500]">1%</span>
           </div>
           <ProgressBar
             height="10px"
             bgColor="#EDEDED"
             barColor="#7EAAFF"
-            percentage="2%"
+            percentage={abstainPercentage}
           />
         </div>
       </div>

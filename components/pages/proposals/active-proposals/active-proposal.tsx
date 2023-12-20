@@ -11,24 +11,23 @@ import { UserContext } from "@/context/user-context";
 import { castVote, getProposalVote } from "@/services/proposals.service";
 import { toast } from "react-toastify";
 
-const ActiveProposal = ({ proposal }: any) => {
-  const { description, proposer, transactionHash, proposalId } = proposal;
+const ActiveProposal = ({ proposal, votes }: any) => {
+  const { description, proposer, transactionHash, proposalId, voters } =
+    proposal;
   const proposalInfo = JSON.parse(description);
   const [show, setShow] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const user = localStorage.getItem("hiveUser");
+  const { user } = useContext(UserContext);
   const [voteData, setVoteData] = useState({
     optionSelected: "",
     comment: "",
-    wallet: user,
+    wallet: user?.wallet,
     proposalId: proposalId,
   });
 
   const [voteDetail, setVoteDetail] = useState<any>([]);
-
-  console.log("vvvv", voteDetail);
 
   useEffect(() => {
     updateSearchParams(
@@ -38,7 +37,7 @@ const ActiveProposal = ({ proposal }: any) => {
       "type",
       "active-proposals"
     );
-    checkProposalVote(proposalId, user as string);
+    checkProposalVote(proposalId, user?.wallet as string);
   }, []);
 
   const checkProposalVote = async (proposalId: string, wallet: string) => {
@@ -182,8 +181,9 @@ const ActiveProposal = ({ proposal }: any) => {
                 ? "No"
                 : "Abstain"
             }
+            votes={votes}
           />
-          <Voters />
+          <Voters voters={voters} />
         </div>
       )}
     </div>

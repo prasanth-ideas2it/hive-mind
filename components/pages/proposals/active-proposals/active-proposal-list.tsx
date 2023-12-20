@@ -88,7 +88,7 @@ export const signTypedDataV4Payload = {
 const ActiveProposalList = (props: any) => {
   const data = props?.data?.data;
   const { proposalCreateds = [] } = data;
-  const user = localStorage.getItem("hiveUser");
+  const { user } = useContext(UserContext);
   const [activeProposals, setActiveProposals] = useState(proposalCreateds);
   console.log("qqq", activeProposals, user);
 
@@ -222,7 +222,9 @@ const ActiveProposalList = (props: any) => {
                       </div>
                     </div>
 
-                    {item.voters?.includes(user?.toLocaleLowerCase()) ? (
+                    {item.voters?.includes(
+                      user?.wallet?.toLocaleLowerCase()
+                    ) ? (
                       <button
                         onClick={() => onVotePost(item?.proposalId)}
                         className="w-[97px] text-[#0B8A00] text-sm font-semibold leading-tight justify-center h-10 flex gap-2 items-center"

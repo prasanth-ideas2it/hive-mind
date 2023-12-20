@@ -1,16 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { getAllMyProposals } from "@/services/proposals.service";
+import { useState, useEffect } from "react";
 
 const MyProposalsList = ({ data }: any) => {
   console.log("my", data);
   const [open, setOpen] = useState(false);
+
+  const [myProposals, setMyProposals] = useState([]);
 
   const onOpenModal = () => {
     document.dispatchEvent(
       new CustomEvent("showModal", { detail: { type: "create-proposal" } })
     );
   };
+
+  useEffect(() => {
+    async function getAllMyProposals() {
+      const myProposals = await getMyProposals(
+        "0x3A6D2faBDf51Af157F3fC79bb50346a615c08BF6"
+      );
+      console.log(myProposals?.data?.data);
+      setMyProposals(myProposals?.data?.data);
+    }
+    getAllMyProposals();
+  }, []);
+
+  async function getMyProposals(account: string) {
+    try {
+      const result = await getAllMyProposals(account);
+      console.log(result.status);
+      if (result.status == 200) {
+        return {
+          data: await result.json(),
+        };
+      } else {
+        return {
+          data: [],
+        };
+      }
+    } catch (err) {
+      return {
+        data: [],
+      };
+    }
+  }
 
   return (
     <div className="flex flex-col gap-[18px] mt-[36px]">
@@ -26,7 +60,8 @@ const MyProposalsList = ({ data }: any) => {
         </button>
       </div>
       <div className="w-full p-2.5 bg-white rounded-xl border-4 border-[#C0D7DC69] flex-col justify-start items-start gap-2.5 inline-flex">
-        {Array.from({ length: 2 }).map((_, index) => {
+        {myProposals.slice(-3).map((item: any, index: number) => {
+          const description = JSON.parse(item.description);
           return (
             <div
               key={`proposal-${index}`}
@@ -39,8 +74,7 @@ const MyProposalsList = ({ data }: any) => {
                   </div>
                   <div className="w-[389px]">
                     <h1 className="text-sm text-slate-900 font-semibold leading-snug">
-                      In the next fiscal year, what should be the top priority
-                      for IT budget allocation?
+                      {description?.title}
                     </h1>
                   </div>
                 </div>

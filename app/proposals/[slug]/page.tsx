@@ -3,6 +3,7 @@ import PastProposal from "@/components/pages/proposals/past-proposals/past-propo
 import {
   getProposalById,
   getVoteDetailsByProposal,
+  getVotesByProposal,
 } from "@/services/proposals.service";
 import { redirect } from "next/navigation";
 // import ProtectedRoute from "@/hoc/protectedRoute";
@@ -51,21 +52,39 @@ async function getVoters(id: string) {
   }
 }
 
+async function getNumberOfVotes(id: string) {
+  try {
+    const result = await getVotesByProposal(id);
+    if (result.status == 200) {
+      return {
+        data: await result.json(),
+      };
+    } else {
+      return {
+        data: {},
+      };
+    }
+  } catch (err) {
+    return {
+      data: {},
+    };
+  }
+}
+
 const Proposal = async (props: any) => {
   const { params } = props;
   // const proposal = (await getProposal()) as any;
 
   const { data } = await getProposal(params?.slug);
   const { data: voters } = await getVoters("3");
-
-  console.log("ddd", data);
+  const { data: votes } = await getNumberOfVotes(params?.slug);
 
   const type = "active-proposal";
 
   return (
     <div>
       {type === "active-proposal" && (
-        <ActiveProposal proposal={data?.data[0]} />
+        <ActiveProposal proposal={data?.data[0]} votes={votes?.data} />
       )}
       {/* {type === "past-proposal" && <PastProposal />} */}
     </div>

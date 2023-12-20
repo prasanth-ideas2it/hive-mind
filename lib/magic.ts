@@ -51,7 +51,7 @@ export const magicLogin = async (email: string) => {
       const res = await getVotingPower(userMetadata.publicAddress as any);
       if (res.status === 200) {
         const result = await res.json();
-        localStorage.setItem("hiveUser", userMetadata.publicAddress);
+        // localStorage.setItem("hiveUser", userMetadata.publicAddress);
         if (result.data === "0") {
           const votingPower = await createVotingPower({
             to: userMetadata.publicAddress,
@@ -74,7 +74,6 @@ export const magicLogin = async (email: string) => {
 };
 
 export const magicLogout = async () => {
-  console.log("logout called");
   const errorMessage = "Error creating magic instance while trying to log out";
   if (magic === false) {
     throw new Error(errorMessage);
@@ -82,7 +81,6 @@ export const magicLogout = async () => {
   try {
     await magic.user.logout();
   } catch (error) {
-    console.log("error>>>>>>>>>>>>>>>>>", error);
     throw new Error(error as string);
   }
 };

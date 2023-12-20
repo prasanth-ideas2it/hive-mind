@@ -48,14 +48,12 @@ const Login = () => {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     // e.preventDefault();
-    console.log(email);
     if (email.trim() === "") {
       setMessage("Please enter a valid email address.");
     } else {
       setMessage("");
       setIsLoading(true);
       const userMetadata = await magicLogin(email);
-      console.log("text", userMetadata);
       dispatch({
         type: USERACTION_TYPES.LOG_IN,
         user: {

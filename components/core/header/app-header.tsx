@@ -8,8 +8,6 @@ import { shortenHex } from "@/utils/helper";
 const AppHeader = () => {
   const { user, dispatch } = useContext(UserContext);
   const router = useRouter();
-  console.log("user>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", user);
-  const wallet = localStorage.getItem("hiveUser");
 
   const handleLogoutButtonClicked = async (
     e: React.MouseEvent<HTMLButtonElement>
@@ -70,7 +68,7 @@ const AppHeader = () => {
               />
               <span className="text-xs text-white leading-6 font-[500]">
                 {/* 0x282...E8D1 */}
-                {shortenHex(wallet as string)}
+                {shortenHex(user?.wallet as string)}
               </span>
             </button>
             <button
