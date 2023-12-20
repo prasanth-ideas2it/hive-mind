@@ -41,13 +41,13 @@ export const convertTimestampToString = (timestamp: number) => {
 
   if (days > 0) {
     formattedDifference += `${days} day${days > 1 ? "s" : ""}, `;
+  } else {
+    formattedDifference += `${hours} hour${
+      hours > 1 ? "s" : ""
+    }, ${minutes} minute${minutes > 1 ? "s" : ""}, ${seconds} second${
+      seconds > 1 ? "s" : ""
+    }`;
   }
-
-  formattedDifference += `${hours} hour${
-    hours > 1 ? "s" : ""
-  }, ${minutes} minute${minutes > 1 ? "s" : ""}, ${seconds} second${
-    seconds > 1 ? "s" : ""
-  }`;
 
   return formattedDifference;
 };
@@ -64,23 +64,21 @@ function getStatusById(id: string) {
     8: "Executed",
   } as any;
 
-  // Check if the ID exists in the map
   if (statusMap.hasOwnProperty(id)) {
     return statusMap[id];
   } else {
-    return "Unknown"; // Or handle the case when the ID is not found
+    return "";
   }
 }
 
 export const onSign = async (message: string) => {
-  console.log("get3");
+  if (magicSign === false) {
+    return;
+  }
   const provider = await magicSign.wallet.getProvider();
-  console.log("get4");
   const web3 = new Web3(provider);
   console.log(web3);
   const account = await magicSign.wallet.connectWithUI();
-  console.log("get5");
-  console.log("acc", account);
   try {
     // Personal sign code -- starts
     const signedMessage = await web3.eth.personal.sign(message, account[0], "");
