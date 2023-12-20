@@ -86,11 +86,10 @@ export const signTypedDataV4Payload = {
 };
 
 const ActiveProposalList = (props: any) => {
-  const data = props?.data?.data;
-  const { proposalCreateds = [] } = data;
+  const data = props?.data;
   const { user } = useContext(UserContext);
-  const [activeProposals, setActiveProposals] = useState(proposalCreateds);
-  console.log("qqq", activeProposals, user);
+  const [activeProposals, setActiveProposals] = useState(data ?? []);
+  console.log("qqq", data, user);
 
   const router = useRouter();
 
@@ -137,66 +136,68 @@ const ActiveProposalList = (props: any) => {
           </button> */}
         </div>
         <div className="w-full p-2.5 bg-white rounded-xl border-4 border-[#C0D7DC69] flex-col justify-start items-start gap-2.5 inline-flex">
-          {activeProposals.slice(-3).map((item: any, index: number) => {
-            const description = JSON.parse(item?.description);
-            return (
-              <div
-                key={`proposal-${index}`}
-                className="flex items-center px-[16px] w-full bg-slate-50 rounded-lg h-[64px]"
-              >
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex gap-2 items-center">
-                    <div
-                      style={{ backgroundColor: "#FFD4B5" }}
-                      className="h-[40px] w-[40px] flex items-center justify-center rounded"
-                    >
-                      <img
-                        src={`${
-                          description.category === "Organisation"
-                            ? "/assets/icons/organization.svg"
-                            : ""
-                        }`}
-                        alt="icon"
-                      />
-                    </div>
-                    <div className="w-[389px]">
-                      <h1 className="text-sm text-slate-900 font-semibold leading-snug">
-                        {description?.title}
-                      </h1>
-                    </div>
-                  </div>
-                  <div className=" w-[265px] h-full flex justify-end items-center gap-2">
-                    <div className=" w-[107px] flex flex-col opacity-50">
-                      <div className="text-neutral-700 text-[10px] font-semibold leading-tight text-center">
-                        Ends in
+          {activeProposals?.map((item: any, index: number) => {
+            if (item?.proposalId !== "4") {
+              const description = JSON.parse(item?.description);
+              return (
+                <div
+                  key={`proposal-${index}`}
+                  className="flex items-center px-[16px] w-full bg-slate-50 rounded-lg h-[64px]"
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex gap-2 items-center">
+                      <div
+                        style={{ backgroundColor: "#FFD4B5" }}
+                        className="h-[40px] w-[40px] flex items-center justify-center rounded"
+                      >
+                        <img
+                          src={`${
+                            description.category === "Organisation"
+                              ? "/assets/icons/organization.svg"
+                              : ""
+                          }`}
+                          alt="icon"
+                        />
                       </div>
-                      <div className="text-neutral-700 text-sm font-semibold leading-tight text-center">
-                        13h 45m
+                      <div className="w-[389px]">
+                        <h1 className="text-sm text-slate-900 font-semibold leading-snug">
+                          {description?.title}
+                        </h1>
                       </div>
                     </div>
+                    <div className=" w-[265px] h-full flex justify-end items-center gap-2">
+                      <div className=" w-[107px] flex flex-col opacity-50">
+                        <div className="text-neutral-700 text-[10px] font-semibold leading-tight text-center">
+                          Ends in
+                        </div>
+                        <div className="text-neutral-700 text-sm font-semibold leading-tight text-center">
+                          13h 45m
+                        </div>
+                      </div>
 
-                    {item.voters?.includes(
-                      user?.wallet?.toLocaleLowerCase()
-                    ) ? (
-                      <button
-                        onClick={() => onVotePost(item?.proposalId)}
-                        className="w-[97px] text-[#0B8A00] text-sm font-semibold leading-tight justify-center h-10 flex gap-2 items-center"
-                      >
-                        <img src="/assets/icons/tick-green.svg" alt="icon" />
-                        Voted
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => onVotePost(item?.proposalId)}
-                        className="w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center"
-                      >
-                        Vote
-                      </button>
-                    )}
+                      {item.voters?.includes(
+                        user?.wallet?.toLocaleLowerCase()
+                      ) ? (
+                        <button
+                          onClick={() => onVotePost(item?.proposalId)}
+                          className="w-[97px] text-[#0B8A00] text-sm font-semibold leading-tight justify-center h-10 flex gap-2 items-center"
+                        >
+                          <img src="/assets/icons/tick-green.svg" alt="icon" />
+                          Voted
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => onVotePost(item?.proposalId)}
+                          className="w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center"
+                        >
+                          Vote
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
+              );
+            }
           })}
         </div>
       </div>

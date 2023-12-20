@@ -22,7 +22,7 @@ const Modal = ({
               onClick={onClose}
               className="cursor-pointer border-0 rounded-[50%] absolute z-[10] top-[-10px] bg-[#475569] h-[26px] w-[26px] right-[-10px] flex items-center justify-center"
             >
-              <img src="assets/icons/close-white.svg" alt="close icon" />
+              <img src="/assets/icons/close-white.svg" alt="close icon" />
             </button>
             {children}
           </div>

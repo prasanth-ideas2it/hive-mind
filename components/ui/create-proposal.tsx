@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import SingleSelect from "./single-select";
 import Modal from "./modal";
 import { createProposal, getAllProposals } from "@/services/proposals.service";
 import { toast } from "react-toastify";
 import { onSign } from "@/utils/helper";
 import { useRouter } from "next/navigation";
+import { UserContext } from "@/context/user-context";
 
 const CreateProposal = () => {
   const [step, setStep] = useState("");
@@ -23,6 +24,8 @@ const CreateProposal = () => {
     options: [{ option: "" }],
     description: "",
   });
+
+  const { user } = useContext(UserContext);
 
   const options = [
     { id: 1, name: "Organisation" },
@@ -112,11 +115,11 @@ const CreateProposal = () => {
             const activeProposalsResponse = await getAllProposals("active");
             if (activeProposalsResponse.status === 200) {
               const activeProposals = await activeProposalsResponse.json();
+              console.log;
               document.dispatchEvent(
                 new CustomEvent("updateActiveProposals", {
                   detail: {
-                    activeProposals:
-                      activeProposals?.data?.data?.proposalCreateds,
+                    activeProposals: activeProposals?.data,
                   },
                 })
               );
@@ -329,6 +332,7 @@ const CreateProposal = () => {
                     category: proposalData?.category?.name,
                   },
                   votingPeriod: proposalData?.time?.value,
+                  wallet: user?.wallet,
                 })
               }
               className="text-white h-10 px-6 py-2.5 text-sm font-semibold leading-tight border border-[#CBD5E1] shadow-[0px_1px_1px_0px_#0F172A14] bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg"

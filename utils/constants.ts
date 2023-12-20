@@ -29,18 +29,6 @@ export const proposals = [
       "In the next fiscal year, what should be the top priority for IT budget allocation?",
     bgColor: "#B9EDB8",
   },
-  {
-    name: "organization",
-    title:
-      "How satisfied are you with the current decision-making processes in the organization?",
-    bgColor: "#FFD4B5",
-  },
-  {
-    name: "rupees",
-    title:
-      "In the next fiscal year, what should be the top priority for IT budget allocation?",
-    bgColor: "#B9EDB8",
-  },
 ];
 
 let colorArray = [{ name: "Organisation", bgcolor: "#FFD4B5" }];

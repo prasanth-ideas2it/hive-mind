@@ -5,7 +5,7 @@ import { proposals } from "@/utils/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-const PastProposalsList = () => {
+const PastProposalsList = ({ data }: any) => {
   const router = useRouter();
 
   const onNavigateToProposal = () => {
@@ -33,7 +33,8 @@ const PastProposalsList = () => {
           </button>
         </div>
         <div className="w-full p-2.5 bg-white rounded-xl border-4 border-[#C0D7DC69] flex-col justify-start items-start gap-2.5 inline-flex">
-          {proposals.map((item, index) => {
+          {data?.map((item: any, index: number) => {
+            const description = JSON.parse(item?.description);
             return (
               <div
                 key={`proposal-${index}`}
@@ -47,13 +48,13 @@ const PastProposalsList = () => {
                       className="h-[40px] w-[40px] flex items-center justify-center rounded"
                     >
                       <img
-                        src={`/assets/icons/${item.name}.svg`}
+                        src={`/assets/icons/organisation.svg`}
                         alt="rupees"
                       />
                     </div>
                     <div className="w-[389px]">
                       <h1 className="text-sm text-slate-900 font-semibold leading-snug">
-                        {item.title}
+                        {description?.title}
                       </h1>
                     </div>
                   </div>
