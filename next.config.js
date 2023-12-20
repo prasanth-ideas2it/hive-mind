@@ -9,6 +9,9 @@ const nextConfig = {
       },
     ];
   },
+  env: {
+    HIVE_MIND_BASE_URL: process.env.HIVE_MIND_BASE_URL,
+  },
 };
 
 module.exports = nextConfig;

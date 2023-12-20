@@ -5,6 +5,7 @@ const Accordion = ({
   className,
   expanded,
   callback,
+  data,
 }: any) => {
   return (
     <div className={`${className}`}>
@@ -15,15 +16,7 @@ const Accordion = ({
         <span className="text-black font-[500] text-sm">{title}</span>
         <img src={icon} alt="icon" />
       </button>
-      {expanded && (
-        <div className="px-[24px] text-[#0F172A]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit
-        </div>
-      )}
+      {expanded && <div className="px-[24px] text-[#0F172A]">{data}</div>}
     </div>
   );
 };

@@ -1,53 +1,53 @@
 "use client";
-import Pagination from "@/components/ui/pagination";
-import { proposals } from "@/utils/constants";
-import { useRouter } from "next/navigation";
 
+import { useEffect, useState, useContext } from "react";
+import Pagination from "@/components/ui/pagination";
+import { useRouter } from "next/navigation";
 import Web3 from "web3";
 import { magicSign } from "@/lib/magic";
-import { recoverPersonalSignature, recoverTypedSignature } from "@metamask/eth-sig-util";
+import { recoverPersonalSignature } from "@metamask/eth-sig-util";
+import { UserContext } from "@/context/user-context";
 
 export const signTypedDataV3Payload = {
-  "types": {
-    "EIP712Domain": [
+  types: {
+    EIP712Domain: [
       {
-        "name": "name",
-        "type": "string"
+        name: "name",
+        type: "string",
       },
       {
-        "name": "version",
-        "type": "string"
+        name: "version",
+        type: "string",
       },
       {
-        "name": "verifyingContract",
-        "type": "address"
-      }
+        name: "verifyingContract",
+        type: "address",
+      },
     ],
-    "Proposal": {
-      "name": "title",
-      "type": "string"
+    Proposal: {
+      name: "title",
+      type: "string",
     },
-    "Vote": {
-      "user": {
-        "type": "address"
+    Vote: {
+      user: {
+        type: "address",
       },
-      "choice": {
-        "type": "string"
-      }
-    }
+      choice: {
+        type: "string",
+      },
+    },
   },
-  "primaryType": "Vote",
-  "domain": {
-    "name": "hive-mind",
-    "version": "1",
-    "verifyingContract": "0xbaf289a8c7a9809e13ac81dc073bd10e051de1df"
+  primaryType: "Vote",
+  domain: {
+    name: "hive-mind",
+    version: "1",
+    verifyingContract: "0xbaf289a8c7a9809e13ac81dc073bd10e051de1df",
   },
-  "message": {
-    "user": "0xABCDEFabcdef1234567890abcdef1234567890",
-    "choice": "Yes"
-  }
-}
-
+  message: {
+    user: "0xABCDEFabcdef1234567890abcdef1234567890",
+    choice: "Yes",
+  },
+};
 
 export const signTypedDataV4Payload = {
   domain: {
@@ -85,15 +85,39 @@ export const signTypedDataV4Payload = {
   },
 };
 
-const ActiveProposalList = () => {
+const ActiveProposalList = (props: any) => {
+  const data = props?.data?.data;
+  const { proposalCreateds = [] } = data;
+  const { user } = useContext(UserContext);
+  const [activeProposals, setActiveProposals] = useState(proposalCreateds);
+  console.log("qqq", activeProposals, user);
+
   const router = useRouter();
+
+  useEffect(() => {
+    function handler(e: any) {
+      console.log("ooo", e.detail.activeProposals);
+      setActiveProposals(e.detail.activeProposals);
+    }
+
+    document.addEventListener("updateActiveProposals", handler);
+    return function () {
+      document.removeEventListener("updateActiveProposals", handler);
+    };
+  }, []);
+
+  const onOpenModal = () => {
+    document.dispatchEvent(
+      new CustomEvent("showModal", { detail: { type: "create-proposal" } })
+    );
+  };
 
   const onSign = async () => {
     const provider = await magicSign.wallet.getProvider();
     const web3 = new Web3(provider);
     const account = await magicSign.wallet.connectWithUI();
     try {
-  // Personal sign code -- starts
+      // Personal sign code -- starts
       const signedMessage = await web3.eth.personal.sign(
         "Here is a basic message!",
         account[0],
@@ -109,11 +133,11 @@ const ActiveProposalList = () => {
           ? "Signing success!"
           : "Signing failed!"
       );
-    // personal sign code -- end
+      // personal sign code -- end
 
       // v4 code -- starts
       // const payload = signTypedDataV3Payload; // or signTypedDataV4Payload
-  
+
       // const params = [account[0], payload];
       // const method = "eth_signTypedData";
       // const signature = await magicSign?.rpcProvider.request({
@@ -121,11 +145,10 @@ const ActiveProposalList = () => {
       //   params,
       // });
       // console.log("Signature:", signature);
-     // v4 code -- ends
+      // v4 code -- ends
 
-     alert("Data signed successfully!");
-
-    } catch (error:any) {
+      alert("Data signed successfully!");
+    } catch (error: any) {
       console.error("Signing error:", error);
       if (error.message.includes("User denied signing")) {
         alert("You declined to sign the data. Please try again.");
@@ -135,14 +158,8 @@ const ActiveProposalList = () => {
     }
   };
 
-  const onVote = () => {
-    router.push("/proposals/1");
-  };
-
-  const onOpenModal = () => {
-    document.dispatchEvent(
-      new CustomEvent("showModal", { detail: { type: "create-proposal" } })
-    );
+  const onVotePost = (id: string) => {
+    router.push(`/proposals/${id}`);
   };
 
   return (
@@ -158,15 +175,17 @@ const ActiveProposalList = () => {
           >
             Create
           </button>
-          <button
+          {/* <button
             onClick={onSign}
             className="text-white h-10 px-6 py-2.5 text-sm font-semibold leading-tight shadow-[0_0_13px_0_rgba(255,107,0,1)] bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg"
           >
             sign
-          </button>
+          </button> */}
         </div>
         <div className="w-full p-2.5 bg-white rounded-xl border-4 border-[#C0D7DC69] flex-col justify-start items-start gap-2.5 inline-flex">
-          {proposals.map((item, index) => {
+          {activeProposals.slice(-3).map((item: any, index: number) => {
+            const description = JSON.parse(item?.description);
+            console.log("xxx", item?.voters, user);
             return (
               <div
                 key={`proposal-${index}`}
@@ -178,11 +197,18 @@ const ActiveProposalList = () => {
                       style={{ backgroundColor: item?.bgColor }}
                       className="h-[40px] w-[40px] flex items-center justify-center rounded"
                     >
-                      <img src={`/assets/icons/${item.name}.svg`} alt="icon" />
+                      <img
+                        src={`${
+                          description.category === "Organisation"
+                            ? "/assets/icons/organization.svg"
+                            : ""
+                        }`}
+                        alt="icon"
+                      />
                     </div>
                     <div className="w-[389px]">
                       <h1 className="text-sm text-slate-900 font-semibold leading-snug">
-                        {item.title}
+                        {description?.title}
                       </h1>
                     </div>
                   </div>
@@ -195,12 +221,25 @@ const ActiveProposalList = () => {
                         13h 45m
                       </div>
                     </div>
-                    <button
-                      onClick={onVote}
-                      className="w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center"
-                    >
-                      Vote
-                    </button>
+
+                    {item.voters?.includes(
+                      user?.wallet?.toLocaleLowerCase()
+                    ) ? (
+                      <button
+                        onClick={() => onVotePost(item?.proposalId)}
+                        className="w-[97px] text-[#0B8A00] text-sm font-semibold leading-tight justify-center h-10 flex gap-2 items-center"
+                      >
+                        <img src="/assets/icons/tick-green.svg" alt="icon" />
+                        Voted
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => onVotePost(item?.proposalId)}
+                        className="w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center"
+                      >
+                        Vote
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
