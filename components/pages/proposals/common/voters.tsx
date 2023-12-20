@@ -21,7 +21,7 @@ const Voters = ({ voters }: any) => {
               >
                 <img src="/assets/icons/profile-black.svg" alt="profile icon" />
                 <span className="text-black text-sm font-[500] leading-6 inline-flex items-center">
-                  {shortenHex(voter)}
+                  {voter}
                 </span>
               </div>
             );

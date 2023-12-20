@@ -112,52 +112,6 @@ const ActiveProposalList = (props: any) => {
     );
   };
 
-  const onSign = async () => {
-    const provider = await magicSign.wallet.getProvider();
-    const web3 = new Web3(provider);
-    const account = await magicSign.wallet.connectWithUI();
-    try {
-      // Personal sign code -- starts
-      const signedMessage = await web3.eth.personal.sign(
-        "Here is a basic message!",
-        account[0],
-        ""
-      );
-      console.log("signedMessage:", signedMessage);
-      const recoveredAddress = recoverPersonalSignature({
-        data: "Here is a basic message!",
-        signature: signedMessage,
-      });
-      console.log(
-        recoveredAddress.toLocaleLowerCase() === account[0].toLocaleLowerCase()
-          ? "Signing success!"
-          : "Signing failed!"
-      );
-      // personal sign code -- end
-
-      // v4 code -- starts
-      // const payload = signTypedDataV3Payload; // or signTypedDataV4Payload
-
-      // const params = [account[0], payload];
-      // const method = "eth_signTypedData";
-      // const signature = await magicSign?.rpcProvider.request({
-      //   method,
-      //   params,
-      // });
-      // console.log("Signature:", signature);
-      // v4 code -- ends
-
-      alert("Data signed successfully!");
-    } catch (error: any) {
-      console.error("Signing error:", error);
-      if (error.message.includes("User denied signing")) {
-        alert("You declined to sign the data. Please try again.");
-      } else {
-        alert("An error occurred during signing. Please try again later.");
-      }
-    }
-  };
-
   const onVotePost = (id: string) => {
     router.push(`/proposals/${id}`);
   };
@@ -185,7 +139,6 @@ const ActiveProposalList = (props: any) => {
         <div className="w-full p-2.5 bg-white rounded-xl border-4 border-[#C0D7DC69] flex-col justify-start items-start gap-2.5 inline-flex">
           {activeProposals.slice(-3).map((item: any, index: number) => {
             const description = JSON.parse(item?.description);
-            console.log("xxx", item?.voters, user);
             return (
               <div
                 key={`proposal-${index}`}
@@ -194,7 +147,7 @@ const ActiveProposalList = (props: any) => {
                 <div className="flex items-center justify-between w-full">
                   <div className="flex gap-2 items-center">
                     <div
-                      style={{ backgroundColor: item?.bgColor }}
+                      style={{ backgroundColor: "#FFD4B5" }}
                       className="h-[40px] w-[40px] flex items-center justify-center rounded"
                     >
                       <img

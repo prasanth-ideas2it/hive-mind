@@ -95,10 +95,8 @@ const CreateProposal = () => {
   };
 
   const onSignProposal = async (payload: any) => {
-    console.log("get");
     const signResponse = await onSign("New Message for create proposal");
-    console.log("get1", signResponse);
-    if (signResponse.status === "success") {
+    if (signResponse?.status === "success") {
       try {
         const createProposalResponse = await createProposal({
           ...payload,
