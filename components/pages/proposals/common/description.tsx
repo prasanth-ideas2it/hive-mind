@@ -3,7 +3,7 @@
 import Accordion from "@/components/ui/accordion";
 import { useState } from "react";
 
-const Description = () => {
+const Description = ({ data }: any) => {
   const [expanded, setExpanded] = useState(true);
 
   const onExpandAccordion = () => {
@@ -18,6 +18,7 @@ const Description = () => {
         buttonStyle="py-[12px] px-[24px]"
         expanded={expanded}
         callback={onExpandAccordion}
+        data={data}
       />
     </div>
   );

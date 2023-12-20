@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 const PastProposalHeader = () => {
   const router = useRouter();
   const onChangeRoute = () => {
-    router.push("/past-proposals");
+    router.push("/proposals/?type=past-proposals");
   };
   return (
     <>

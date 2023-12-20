@@ -3,11 +3,14 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/active-proposals",
-        destination: "/",
+        source: "/",
+        destination: "/login",
         permanent: true,
       },
     ];
+  },
+  env: {
+    HIVE_MIND_BASE_URL: process.env.HIVE_MIND_BASE_URL,
   },
 };
 
