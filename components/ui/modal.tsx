@@ -13,7 +13,7 @@ const Modal = ({
         } fixed top-0 left-0 w-screen h-screen z-[4] `}
       >
         <div
-          className={`fixed left-16 z-[5] w-[calc(100%_-_64px)]  outline-0 flex justify-center ${
+          className={`fixed z-[5] w-full outline-0 flex justify-center ${
             position === "center" ? "h-full items-center" : ""
           }`}
         >

@@ -1,14 +1,12 @@
 "use client";
-import Pagination from "@/components/ui/pagination";
-import { proposals } from "@/utils/constants";
-import { useRouter } from "next/navigation";
 
+import { useEffect, useState, useContext } from "react";
+import Pagination from "@/components/ui/pagination";
+import { useRouter } from "next/navigation";
 import Web3 from "web3";
 import { magicSign } from "@/lib/magic";
-import {
-  recoverPersonalSignature,
-  recoverTypedSignature,
-} from "@metamask/eth-sig-util";
+import { recoverPersonalSignature } from "@metamask/eth-sig-util";
+import { UserContext } from "@/context/user-context";
 
 export const signTypedDataV3Payload = {
   types: {
@@ -88,11 +86,25 @@ export const signTypedDataV4Payload = {
 };
 
 const ActiveProposalList = (props: any) => {
+  const data = props?.data?.data;
+  const { proposalCreateds = [] } = data;
+  const user = localStorage.getItem("hiveUser");
+  const [activeProposals, setActiveProposals] = useState(proposalCreateds);
+  console.log("qqq", activeProposals, user);
+
   const router = useRouter();
 
-  const onVote = () => {
-    router.push("/proposals/1");
-  };
+  useEffect(() => {
+    function handler(e: any) {
+      console.log("ooo", e.detail.activeProposals);
+      setActiveProposals(e.detail.activeProposals);
+    }
+
+    document.addEventListener("updateActiveProposals", handler);
+    return function () {
+      document.removeEventListener("updateActiveProposals", handler);
+    };
+  }, []);
 
   const onOpenModal = () => {
     document.dispatchEvent(
@@ -146,6 +158,10 @@ const ActiveProposalList = (props: any) => {
     }
   };
 
+  const onVotePost = (id: string) => {
+    router.push(`/proposals/${id}`);
+  };
+
   return (
     <div className="flex flex-col gap-[20px]">
       <div className="flex flex-col gap-[18px] mt-[36px]">
@@ -159,15 +175,17 @@ const ActiveProposalList = (props: any) => {
           >
             Create
           </button>
-          <button
+          {/* <button
             onClick={onSign}
             className="text-white h-10 px-6 py-2.5 text-sm font-semibold leading-tight shadow-[0_0_13px_0_rgba(255,107,0,1)] bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg"
           >
             sign
-          </button>
+          </button> */}
         </div>
         <div className="w-full p-2.5 bg-white rounded-xl border-4 border-[#C0D7DC69] flex-col justify-start items-start gap-2.5 inline-flex">
-          {proposals.map((item, index) => {
+          {activeProposals.slice(-3).map((item: any, index: number) => {
+            const description = JSON.parse(item?.description);
+            console.log("xxx", item?.voters, user);
             return (
               <div
                 key={`proposal-${index}`}
@@ -179,11 +197,18 @@ const ActiveProposalList = (props: any) => {
                       style={{ backgroundColor: item?.bgColor }}
                       className="h-[40px] w-[40px] flex items-center justify-center rounded"
                     >
-                      <img src={`/assets/icons/${item.name}.svg`} alt="icon" />
+                      <img
+                        src={`${
+                          description.category === "Organisation"
+                            ? "/assets/icons/organization.svg"
+                            : ""
+                        }`}
+                        alt="icon"
+                      />
                     </div>
                     <div className="w-[389px]">
                       <h1 className="text-sm text-slate-900 font-semibold leading-snug">
-                        {item.title}
+                        {description?.title}
                       </h1>
                     </div>
                   </div>
@@ -196,12 +221,23 @@ const ActiveProposalList = (props: any) => {
                         13h 45m
                       </div>
                     </div>
-                    <button
-                      onClick={onVote}
-                      className="w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center"
-                    >
-                      Vote
-                    </button>
+
+                    {item.voters?.includes(user?.toLocaleLowerCase()) ? (
+                      <button
+                        onClick={() => onVotePost(item?.proposalId)}
+                        className="w-[97px] text-[#0B8A00] text-sm font-semibold leading-tight justify-center h-10 flex gap-2 items-center"
+                      >
+                        <img src="/assets/icons/tick-green.svg" alt="icon" />
+                        Voted
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => onVotePost(item?.proposalId)}
+                        className="w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center"
+                      >
+                        Vote
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

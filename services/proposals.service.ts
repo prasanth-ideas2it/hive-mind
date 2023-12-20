@@ -16,7 +16,7 @@ export async function getVotingPower(account: string) {
 
 export async function createVotingPower(payload: any) {
   const requestOptions: RequestInit = {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -112,7 +112,7 @@ export async function getVoteDetailsByProposal(proposalId: string) {
 
 export async function createProposal(payload: any) {
   const requestOptions: RequestInit = {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -122,6 +122,38 @@ export async function createProposal(payload: any) {
 
   return await fetch(
     `${process.env.HIVE_MIND_BASE_URL}/api/user/propose`,
+    requestOptions
+  );
+}
+
+export async function getProposalVote(proposalId: string, wallet: string) {
+  const requestOptions: RequestInit = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  };
+
+  return await fetch(
+    `${process.env.HIVE_MIND_BASE_URL}/api/user/vote/${wallet}/${proposalId}`,
+    requestOptions
+  );
+}
+
+export async function castVote(payload: any) {
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(payload),
+  };
+
+  return await fetch(
+    `${process.env.HIVE_MIND_BASE_URL}/api/user/castVote`,
     requestOptions
   );
 }

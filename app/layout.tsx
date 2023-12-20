@@ -12,6 +12,7 @@ import {
   UserReducer,
 } from "@/context/user-context";
 import { magic } from "@/lib/magic";
+import Toaster from "@/components/core/toaster/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,10 @@ export default function RootLayout({
 }) {
   const initialUser = null;
   const [user, dispatch] = useReducer(UserReducer, initialUser);
+  let wallet: any = "";
+  if (typeof window !== "undefined") {
+    wallet = localStorage.getItem("hiveUser");
+  }
   const router = useRouter();
 
   React.useEffect(() => {
@@ -35,10 +40,8 @@ export default function RootLayout({
         //  setIsLoading(false)
         return;
       }
-
       const isLoggedIn = await magic.user.isLoggedIn();
       //  setIsLoading(false)
-
       if (isLoggedIn) {
         const userMetadata = await magic.user.getInfo();
         dispatch({
@@ -67,14 +70,15 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <UserContext.Provider value={value}>
-          {!user && children}
-          {user && (
+          {!wallet && children}
+          {wallet && (
             <div className="bg-[url('/assets/images/background.jpg')] w-full bg-cover bg-no-repeat h-[285px] shadow-[0_0_8px_0_rgba(0,0,0,0.14)]">
               <AppHeader />
               <div className="absolute left-1/2 transform -translate-x-1/2 top-[96px] w-[800px]">
                 {children}
               </div>
               <CreateProposal />
+              <Toaster />
             </div>
           )}
         </UserContext.Provider>

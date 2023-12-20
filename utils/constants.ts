@@ -18,7 +18,7 @@ export const navItems = [
 
 export const proposals = [
   {
-    name: "organization",
+    name: "Organisation",
     title:
       "How satisfied are you with the current decision-making processes in the organization?",
     bgColor: "#FFD4B5",
@@ -42,3 +42,22 @@ export const proposals = [
     bgColor: "#B9EDB8",
   },
 ];
+
+let colorArray = [{ name: "Organisation", bgcolor: "#FFD4B5" }];
+
+function getBgColorByName(name: string) {
+  let foundObject = colorArray.find((obj) => obj.name === name);
+
+  // Check if the object was found
+  if (foundObject) {
+    return foundObject.bgcolor;
+  } else {
+    return "Name not found";
+  }
+}
+
+// Example usage
+let requestedName = "Object2";
+let bgColor = getBgColorByName(requestedName);
+
+console.log(bgColor); // Output: #00FF00

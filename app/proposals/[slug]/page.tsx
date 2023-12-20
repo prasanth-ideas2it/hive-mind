@@ -55,16 +55,18 @@ const Proposal = async (props: any) => {
   const { params } = props;
   // const proposal = (await getProposal()) as any;
 
-  const { data } = await getProposal("3");
+  const { data } = await getProposal(params?.slug);
   const { data: voters } = await getVoters("3");
 
-  console.log("ddd", voters);
+  console.log("ddd", data);
 
   const type = "active-proposal";
 
   return (
     <div>
-      {type === "active-proposal" && <ActiveProposal />}
+      {type === "active-proposal" && (
+        <ActiveProposal proposal={data?.data[0]} />
+      )}
       {/* {type === "past-proposal" && <PastProposal />} */}
     </div>
   );

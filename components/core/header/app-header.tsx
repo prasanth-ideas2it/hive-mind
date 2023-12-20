@@ -1,25 +1,32 @@
 import { useContext } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { UserContext, USERACTION_TYPES } from '@/context/user-context'
+import { UserContext, USERACTION_TYPES } from "@/context/user-context";
 import NavLinks from "./navlinks";
 import { magicLogout } from "@/lib/magic";
+import { shortenHex } from "@/utils/helper";
 
 const AppHeader = () => {
-  const {user, dispatch} = useContext(UserContext)
+  const { user, dispatch } = useContext(UserContext);
+  const router = useRouter();
   console.log("user>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", user);
+  const wallet = localStorage.getItem("hiveUser");
 
-  const handleLogoutButtonClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+  const handleLogoutButtonClicked = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
     try {
-      await magicLogout()
+      await magicLogout();
+      router.replace("/login");
+      localStorage.removeItem("hiveUser");
       dispatch({
-         type: USERACTION_TYPES.LOG_OUT,
-         user: null
-      })
+        type: USERACTION_TYPES.LOG_OUT,
+        user: null,
+      });
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
- }
+  };
 
   return (
     <div className="py-[20px] px-[48px]">
@@ -63,10 +70,13 @@ const AppHeader = () => {
               />
               <span className="text-xs text-white leading-6 font-[500]">
                 {/* 0x282...E8D1 */}
-                {user?.wallet}
+                {shortenHex(wallet as string)}
               </span>
             </button>
-            <button className="px-[7px] h-full flex items-center bg-opacity-30 bg-[#FFFFFF33] rounded-r" onClick={handleLogoutButtonClicked}>
+            <button
+              className="px-[7px] h-full flex items-center bg-opacity-30 bg-[#FFFFFF33] rounded-r"
+              onClick={handleLogoutButtonClicked}
+            >
               <img src="/assets/icons/logout.svg" alt="icon" />
             </button>
           </div>
