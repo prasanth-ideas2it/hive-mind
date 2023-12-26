@@ -10,6 +10,7 @@ async function getProposals(type: string) {
   try {
     const result = await getAllProposals(type);
     if (result.status == 200) {
+      console.log("jill");
       return {
         data: await result.json(),
       };

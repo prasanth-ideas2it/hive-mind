@@ -26,6 +26,8 @@ const AppHeader = () => {
     }
   };
 
+  console.log(user);
+
   return (
     <div className="py-[20px] px-[48px]">
       <div className="flex h-[44px] items-center justify-between">

@@ -13,6 +13,7 @@ import {
 } from "@/context/user-context";
 import { magic } from "@/lib/magic";
 import Toaster from "@/components/core/toaster/toaster";
+import Loader from "@/components/core/loader/loader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -84,6 +85,7 @@ export default function RootLayout({
           {!user?.wallet && children}
           {user && (
             <div className="bg-[url('/assets/images/background.jpg')] w-full bg-cover bg-no-repeat h-[285px] shadow-[0_0_8px_0_rgba(0,0,0,0.14)]">
+              <Loader />
               <AppHeader />
               <div className="absolute left-1/2 transform -translate-x-1/2 top-[96px] w-[800px]">
                 {children}

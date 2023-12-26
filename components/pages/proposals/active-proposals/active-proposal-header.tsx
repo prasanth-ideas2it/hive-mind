@@ -1,9 +1,16 @@
 "use client";
 
 import IconButton from "@/components/ui/icon-button";
+import { getStatusById, timeDifference } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 
-const ActiveProposalHeader = ({ title, creator, transactionHash }: any) => {
+const ActiveProposalHeader = ({
+  title,
+  creator,
+  transactionHash,
+  voteEnd,
+  state,
+}: any) => {
   const router = useRouter();
   const onChangeRoute = () => {
     router.push("/proposals");
@@ -32,10 +39,10 @@ const ActiveProposalHeader = ({ title, creator, transactionHash }: any) => {
           <div className="flex items-center gap-[14px]">
             <div className="flex items-center gap-[10px]">
               <span className="text-[#FF7A00] capitalize px-2 inline-flex items-center rounded-[36px] h-[20px] font-semibold leading-5 text-[12px] border border-[#FF7A00] shadow-[0px_0px_6px_0px_rgba(255,122,0,1)]">
-                active
+                {getStatusById(state)}
               </span>
               <span className="text-[#FF7A00] font-semibold text-sm">
-                1 day 3 hours left
+                {`${timeDifference(voteEnd)} left`}
               </span>
             </div>
             <div className="flex items-center gap-1">

@@ -1,9 +1,16 @@
 "use client";
 
 import IconButton from "@/components/ui/icon-button";
+import { formatTimestampAsDate, getStatusById } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 
-const PastProposalHeader = () => {
+const PastProposalHeader = ({
+  title,
+  creator,
+  transactionHash,
+  voteEnd,
+  state,
+}: any) => {
   const router = useRouter();
   const onChangeRoute = () => {
     router.push("/proposals/?type=past-proposals");
@@ -24,28 +31,23 @@ const PastProposalHeader = () => {
       <div className="flex flex-col gap-[6px]">
         <div className="flex items-center justify-between">
           <div className="w-[481px]">
-            <h1 className="text-white text-2xl font-semibold">
-              Should the organization offer a flexible work-from-home option?
-            </h1>
+            <h1 className="text-white text-2xl font-semibold">{title}</h1>
           </div>
-          <IconButton name="0xbf47...c2a2" icon="/assets/icons/cube.svg" />
+          <IconButton name={transactionHash} icon="/assets/icons/cube.svg" />
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[14px]">
             <div className="flex items-center gap-[10px]">
               <span className="text-[#FF7A00] capitalize px-2 inline-flex items-center rounded-[36px] h-[20px] font-semibold leading-5 text-[12px] border border-[#FF7A00] shadow-[0px_0px_6px_0px_rgba(255,122,0,1)]">
-                active
+                {getStatusById(state)}
               </span>
               <span className="text-[#FF7A00] font-semibold text-sm">
-                1 day 3 hours left
+                {formatTimestampAsDate(voteEnd)}
               </span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-white text-sm">Created by</span>
-              <IconButton
-                name="0xbf47...c2a2"
-                icon="/assets/icons/profile.svg"
-              />
+              <IconButton name={creator} icon="/assets/icons/profile.svg" />
             </div>
           </div>
           <div className="opacity-[50%] flex items-center gap-2">
