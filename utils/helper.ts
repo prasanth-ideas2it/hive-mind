@@ -62,14 +62,14 @@ export function timeDifference(timestamp: number) {
 
 export function getStatusById(id: string) {
   const statusMap = {
-    1: "Pending",
-    2: "Active",
-    3: "Canceled",
-    4: "Defeated",
-    5: "Succeeded",
-    6: "Queued",
-    7: "Expired",
-    8: "Executed",
+    0: "Pending",
+    1: "Active",
+    2: "Canceled",
+    3: "Defeated",
+    4: "Succeeded",
+    5: "Queued",
+    6: "Expired",
+    7: "Executed",
   } as any;
 
   if (statusMap.hasOwnProperty(id)) {

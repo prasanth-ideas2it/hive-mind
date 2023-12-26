@@ -62,8 +62,13 @@ const ActiveProposalList = (props: any) => {
               const description = JSON.parse(item?.description);
               return (
                 <div
+                  onClick={() =>
+                    timeDifference(item?.voteEnd)
+                      ? onVotePost(item?.proposalId)
+                      : () => {}
+                  }
                   key={`proposal-${index}`}
-                  className="flex items-center px-[16px] w-full bg-slate-50 rounded-lg h-[64px]"
+                  className="flex items-center px-[16px] w-full bg-slate-50 rounded-lg h-[64px] cursor-pointer"
                 >
                   <div className="flex items-center justify-between w-full">
                     <div className="flex gap-2 items-center">
@@ -101,17 +106,21 @@ const ActiveProposalList = (props: any) => {
                       {item.voters?.includes(
                         user?.wallet?.toLocaleLowerCase()
                       ) ? (
-                        <button
-                          onClick={() => onVotePost(item?.proposalId)}
-                          className="w-[97px] text-[#0B8A00] text-sm font-semibold leading-tight justify-center h-10 flex gap-2 items-center"
-                        >
+                        <button className="w-[97px] text-[#0B8A00] text-sm font-semibold leading-tight justify-center h-10 flex gap-2 items-center">
                           <img src="/assets/icons/tick-green.svg" alt="icon" />
                           Voted
                         </button>
                       ) : (
                         <button
                           onClick={() => onVotePost(item?.proposalId)}
-                          className="w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center"
+                          disabled={
+                            timeDifference(item?.voteEnd) ? false : true
+                          }
+                          className={`w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center ${
+                            timeDifference(item?.voteEnd)
+                              ? false
+                              : "disabled:opacity-30"
+                          } `}
                         >
                           Vote
                         </button>
