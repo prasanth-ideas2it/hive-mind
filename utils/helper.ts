@@ -2,6 +2,7 @@ import moment from "moment";
 import Web3 from "web3";
 import { magicSign } from "@/lib/magic";
 import { recoverPersonalSignature } from "@metamask/eth-sig-util";
+import copy from "copy-to-clipboard";
 
 export const updateSearchParams = (
   router: any,
@@ -137,3 +138,14 @@ export function formatTimestampAsDate(timestamp: number) {
   const timestampInMilliseconds = timestamp * 1000;
   return moment(timestampInMilliseconds).format("M/D YYYY");
 }
+
+export const copyLink = async (id: any, msg: string) => {
+  try {
+    const copiedElement = document.getElementById(id) as any;
+    copiedElement.style.display = "block";
+    copy(msg);
+    setTimeout(() => {
+      copiedElement.style.display = "none";
+    }, 1000);
+  } catch (error) {}
+};
