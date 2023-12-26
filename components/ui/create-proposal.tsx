@@ -98,6 +98,11 @@ const CreateProposal = () => {
   };
 
   const onSignProposal = async (payload: any) => {
+    document.dispatchEvent(
+      new CustomEvent("show-loader", {
+        detail: true,
+      })
+    );
     const signResponse = await onSign("New Message for create proposal");
     if (signResponse?.status === "success") {
       try {
@@ -111,6 +116,11 @@ const CreateProposal = () => {
         ) {
           const res = await createProposalResponse.json();
           if (res.status) {
+            document.dispatchEvent(
+              new CustomEvent("show-loader", {
+                detail: false,
+              })
+            );
             console.log("ooo", res);
             const activeProposalsResponse = await getAllProposals("active");
             if (activeProposalsResponse.status === 200) {
@@ -132,6 +142,11 @@ const CreateProposal = () => {
         }
       } catch (error) {
         toast.error("Something Went Wrong");
+        document.dispatchEvent(
+          new CustomEvent("show-loader", {
+            detail: false,
+          })
+        );
       }
     }
   };

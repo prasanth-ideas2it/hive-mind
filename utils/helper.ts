@@ -22,37 +22,44 @@ export const updateSearchParams = (
   router.replace(`${pathname}${query}`);
 };
 
-export const convertTimestampToString = (timestamp: number) => {
-  const currentMoment = moment();
+export function timeDifference(timestamp: number) {
+  const timestampMs = timestamp * 1000;
 
-  // Get the future moment using the future timestamp
-  const futureMoment = moment(timestamp);
+  const currentTime = moment();
+  const providedTime = moment(timestampMs);
 
-  const duration = moment.duration(futureMoment.diff(currentMoment));
-
-  // Extract the days, hours, minutes, and seconds from the duration
-  const days = duration.days();
-  const hours = duration.hours();
-  const minutes = duration.minutes();
-  const seconds = duration.seconds();
-
-  // Display the time difference
-  let formattedDifference = "";
-
-  if (days > 0) {
-    formattedDifference += `${days} day${days > 1 ? "s" : ""}, `;
-  } else {
-    formattedDifference += `${hours} hour${
-      hours > 1 ? "s" : ""
-    }, ${minutes} minute${minutes > 1 ? "s" : ""}, ${seconds} second${
-      seconds > 1 ? "s" : ""
-    }`;
+  // Check if the provided timestamp is in the past
+  if (providedTime.isBefore(currentTime)) {
+    return "";
   }
 
-  return formattedDifference;
-};
+  // Calculate the duration between the current time and the provided timestamp
+  const duration = moment.duration(providedTime.diff(currentTime));
 
-function getStatusById(id: string) {
+  // Get the days, hours, and minutes from the duration
+  const daysDifference = duration.days();
+  const hoursDifference = duration.hours();
+  const minutesDifference = duration.minutes();
+
+  // Check if the difference is within a day
+  if (daysDifference === 0) {
+    // Check if the difference is within an hour
+    if (hoursDifference === 0) {
+      return `${minutesDifference} mins`;
+    } else {
+      // Check if the difference is more than 3 hours
+      return `${hoursDifference} hrs`;
+    }
+  } else {
+    if (hoursDifference >= 1) {
+      return `${daysDifference} days ${hoursDifference} hrs`;
+    } else {
+      return `${daysDifference} days`;
+    }
+  }
+}
+
+export function getStatusById(id: string) {
   const statusMap = {
     1: "Pending",
     2: "Active",
@@ -123,4 +130,10 @@ export function shortenHex(hexString: string, startLength = 6, endLength = 4) {
   const prefix = hexString?.slice(0, startLength);
   const suffix = hexString?.slice(-endLength);
   return `${prefix}...${suffix}`;
+}
+
+export function formatTimestampAsDate(timestamp: number) {
+  // Format the timestamp using Moment.js
+  const timestampInMilliseconds = timestamp * 1000;
+  return moment(timestampInMilliseconds).format("M/D YYYY");
 }

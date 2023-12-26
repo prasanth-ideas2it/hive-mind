@@ -1,19 +1,32 @@
 import ProgressBar from "@/components/ui/progress-bar";
 
-const Results = ({ title, votedOption, proposalType, status, votes }: any) => {
-  const { againstVotes, forVotes, abstainVotes } = votes;
+const Results = ({
+  title,
+  votedOption,
+  proposalType,
+  status,
+  votes,
+  decision,
+  voterSupport,
+}: any) => {
+  const againstVotes = votes?.againstVotes;
+  const forVotes = votes?.forVotes;
+  const abstainVotes = votes?.abstainVotes;
 
-  const againstVotesNum = parseInt(againstVotes, 10);
-  const forVotesNum = parseInt(forVotes, 10);
-  const abstainVotesNum = parseInt(abstainVotes, 10);
+  const againstVotesNum = parseInt(againstVotes, 10) || 0;
+  const forVotesNum = parseInt(forVotes, 10) || 0;
+  const abstainVotesNum = parseInt(abstainVotes, 10) || 0;
 
   // Calculate total votes
   const totalVotes = againstVotesNum + forVotesNum + abstainVotesNum;
 
   // Calculate percentages
-  const againstPercentage = (againstVotesNum / totalVotes) * 100;
-  const forPercentage = (forVotesNum / totalVotes) * 100;
-  const abstainPercentage = (abstainVotesNum / totalVotes) * 100;
+  const againstPercentage =
+    totalVotes !== 0 ? (againstVotesNum / totalVotes) * 100 : 0;
+  const forPercentage = totalVotes !== 0 ? (forVotesNum / totalVotes) * 100 : 0;
+  const abstainPercentage =
+    totalVotes !== 0 ? (abstainVotesNum / totalVotes) * 100 : 0;
+
   return (
     <div className="border-4 border-[#C0D7DC69] rounded-xl bg-white px-[24px] pt-[12px] pb-[24px] flex flex-col gap-[10px]">
       <h1 className="text-sm text-black font-[500] py-2">{title}</h1>
@@ -23,7 +36,7 @@ const Results = ({ title, votedOption, proposalType, status, votes }: any) => {
           {`You voted for - ${votedOption}`}
         </span>
       </div>
-      {status === "concluded" && proposalType === "past-proposal" && (
+      {typeof decision === "object" && decision !== null && (
         <div className="bg-[#ECEAFF] rounded-lg px-[16px] pt-[16px] pb-[8px] flex flex-col gap-[12px]">
           <div className="flex items-center gap-2">
             <img src="/assets/icons/tick-rounded.svg" alt="icon" />
@@ -33,33 +46,50 @@ const Results = ({ title, votedOption, proposalType, status, votes }: any) => {
             <div className="flex flex-col gap-2 bg-white rounded-lg px-[16px] py-[14px]">
               <div className="flex items-center justify-between">
                 <span className="text-[#0F172A] text-sm font-[500]">
-                  Yes, full-time
+                  {decision?.managementDecision == 0
+                    ? "No"
+                    : decision?.managementDecision == 1
+                    ? "Yes"
+                    : "Abstain"}
                 </span>
-                <span className="text-[#0F172A] text-sm font-[500]">7.54%</span>
+                <span className="text-[#0F172A] text-sm font-[500]">
+                  {decision?.managementDecision == 0
+                    ? `${againstPercentage}%`
+                    : decision?.managementDecision == 1
+                    ? `${forPercentage}%`
+                    : `${abstainPercentage}`}
+                </span>
               </div>
-              <ProgressBar
-                height="10px"
-                bgColor="#EDEDED"
-                barColor="#FFAA5C"
-                percentage="7.54%"
-              />
+              {decision?.managementDecision == 0 ? (
+                <ProgressBar
+                  height="10px"
+                  bgColor="#EDEDED"
+                  barColor="#FFAA5C"
+                  percentage={againstPercentage}
+                />
+              ) : decision?.managementDecision == 1 ? (
+                <ProgressBar
+                  height="10px"
+                  bgColor="#EDEDED"
+                  barColor="#00BC56"
+                  percentage={forPercentage}
+                />
+              ) : (
+                <ProgressBar
+                  height="10px"
+                  bgColor="#EDEDED"
+                  barColor="#7EAAFF"
+                  percentage={abstainPercentage}
+                />
+              )}
             </div>
           </div>
           <div>
             <p className="font-[400] text-sm text-[#0F172A]">
-              Part-time remote work in an IT organization is advantageous for
-              cost savings, maintaining flexibility, promoting team
-              collaboration, sustaining employee morale & engagement, ensuring
-              security & compliance, facilitating effective training &
-              onboarding, optimizing resource allocation, preserving company
-              culture, and enhancing communication & collaboration tools. This
-              approach allows for a balanced integration of remote & in-person
-              work, addressing the specific needs of tasks, fostering a positive
-              work environment, and promoting the overall well-being of
-              employees.
+              {decision?.comment}
             </p>
           </div>
-          <div className="flex justify-between items-center px-[12px] pt-[12px] pb-[8px] border-t border-[#0000001A]">
+          {/* <div className="flex justify-between items-center px-[12px] pt-[12px] pb-[8px] border-t border-[#0000001A]">
             <span className="text-slate-900 text-sm font-medium leading-tight">
               Are you happy with the decision?
             </span>
@@ -73,7 +103,7 @@ const Results = ({ title, votedOption, proposalType, status, votes }: any) => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
       <div className="flex flex-col gap-[10px]">

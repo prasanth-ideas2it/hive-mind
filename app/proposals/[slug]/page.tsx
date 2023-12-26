@@ -1,6 +1,7 @@
 import ActiveProposal from "@/components/pages/proposals/active-proposals/active-proposal";
 import PastProposal from "@/components/pages/proposals/past-proposals/past-proposal";
 import {
+  getManagementDecision,
   getProposalById,
   getVoteDetailsByProposal,
   getVotesByProposal,
@@ -71,22 +72,53 @@ async function getNumberOfVotes(id: string) {
   }
 }
 
+async function getManagementDecisionsById(id: string) {
+  try {
+    const result = await getManagementDecision(id);
+    if (result.status == 200) {
+      return {
+        data: await result.json(),
+      };
+    } else {
+      return {
+        data: {},
+      };
+    }
+  } catch (err) {
+    return {
+      data: {},
+    };
+  }
+}
+
 const Proposal = async (props: any) => {
   const { params } = props;
   // const proposal = (await getProposal()) as any;
 
   const { data } = await getProposal(params?.slug);
-  const { data: voters } = await getVoters("3");
+  const { data: voters } = await getVoters(params?.slug);
   const { data: votes } = await getNumberOfVotes(params?.slug);
+  const { data: decision } = await getManagementDecisionsById(params?.slug);
+  console.log("deci", voters);
 
-  const type = "active-proposal";
+  const type = "active";
+
+  const state = data?.data[0]?.state;
+  const pastProposals = ["3", "7", "8"];
+  const activeProposals = ["1", "2", "4", "5", "6"];
 
   return (
     <div>
-      {type === "active-proposal" && (
+      {activeProposals.includes(state) && (
         <ActiveProposal proposal={data?.data[0]} votes={votes?.data} />
       )}
-      {/* {type === "past-proposal" && <PastProposal />} */}
+      {pastProposals.includes(state) && (
+        <PastProposal
+          proposal={data?.data[0]}
+          decision={decision?.data}
+          votes={votes?.data}
+        />
+      )}
     </div>
   );
 };

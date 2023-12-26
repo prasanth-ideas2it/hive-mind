@@ -2,14 +2,17 @@
 
 import Pagination from "@/components/ui/pagination";
 import { proposals } from "@/utils/constants";
+import { formatTimestampAsDate } from "@/utils/helper";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 const PastProposalsList = ({ data }: any) => {
+  console.log("aaa", data);
+
   const router = useRouter();
 
-  const onNavigateToProposal = () => {
-    router.push("/past-proposals/1");
+  const onNavigateToProposal = (proposalId: any) => {
+    router.push(`/proposals/${proposalId}`);
   };
 
   const onOpenModal = () => {
@@ -39,7 +42,7 @@ const PastProposalsList = ({ data }: any) => {
               <div
                 key={`proposal-${index}`}
                 className="flex items-center px-[16px] w-full bg-slate-50 rounded-lg h-[64px] cursor-pointer"
-                onClick={onNavigateToProposal}
+                onClick={() => onNavigateToProposal(item?.proposalId)}
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex gap-2 items-center">
@@ -64,14 +67,14 @@ const PastProposalsList = ({ data }: any) => {
                         Ended on
                       </div>
                       <div className="text-neutral-700 text-sm font-semibold leading-tight text-center">
-                        3/1 2023
+                        {formatTimestampAsDate(item?.voteEnd)}
                       </div>
                     </div>
                     <button
                       // onClick={onVote}
-                      className="w-[97px] text-[#17B11D] bg-green-600 bg-opacity-5 text-[13px] font-semibold leading-5 shadow h-[24px] border border-[#17B11D] rounded-full flex justify-center items-center"
+                      className="w-[97px] capitalize text-[#17B11D] bg-green-600 bg-opacity-5 text-[13px] font-semibold leading-5 shadow h-[24px] border border-[#17B11D] rounded-full flex justify-center items-center"
                     >
-                      Passed
+                      {item?.status}
                     </button>
                   </div>
                 </div>

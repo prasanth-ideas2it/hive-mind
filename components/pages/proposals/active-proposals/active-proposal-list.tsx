@@ -3,87 +3,8 @@
 import { useEffect, useState, useContext } from "react";
 import Pagination from "@/components/ui/pagination";
 import { useRouter } from "next/navigation";
-import Web3 from "web3";
-import { magicSign } from "@/lib/magic";
-import { recoverPersonalSignature } from "@metamask/eth-sig-util";
 import { UserContext } from "@/context/user-context";
-
-export const signTypedDataV3Payload = {
-  types: {
-    EIP712Domain: [
-      {
-        name: "name",
-        type: "string",
-      },
-      {
-        name: "version",
-        type: "string",
-      },
-      {
-        name: "verifyingContract",
-        type: "address",
-      },
-    ],
-    Proposal: {
-      name: "title",
-      type: "string",
-    },
-    Vote: {
-      user: {
-        type: "address",
-      },
-      choice: {
-        type: "string",
-      },
-    },
-  },
-  primaryType: "Vote",
-  domain: {
-    name: "hive-mind",
-    version: "1",
-    verifyingContract: "0xbaf289a8c7a9809e13ac81dc073bd10e051de1df",
-  },
-  message: {
-    user: "0xABCDEFabcdef1234567890abcdef1234567890",
-    choice: "Yes",
-  },
-};
-
-export const signTypedDataV4Payload = {
-  domain: {
-    // Defining the chain aka Rinkeby goerli or Ethereum Main Net
-    chainId: 5,
-    // Give a user friendly name to the specific contract you are signing for.
-    name: "Ether Mail",
-    // If name isn't enough add verifying contract to make sure you are establishing contracts with the proper entity
-    verifyingContract: "0xbaf289a8c7a9809e13ac81dc073bd10e051de1df",
-    // Just let's you know the latest version. Definitely make sure the field name is correct.
-    version: "1",
-  },
-
-  // Defining the message signing data content.
-  message: {
-    contents: "Hello, Bob!",
-    attachedMoneyInEth: 4.2,
-    from: {
-      name: "Cow",
-      wallets: [
-        "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
-        "0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF",
-      ],
-    },
-    to: [
-      {
-        name: "Bob",
-        wallets: [
-          "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
-          "0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57",
-          "0xB0B0b0b0b0b0B000000000000000000000000000",
-        ],
-      },
-    ],
-  },
-};
+import { timeDifference } from "@/utils/helper";
 
 const ActiveProposalList = (props: any) => {
   const data = props?.data;
@@ -168,10 +89,12 @@ const ActiveProposalList = (props: any) => {
                     <div className=" w-[265px] h-full flex justify-end items-center gap-2">
                       <div className=" w-[107px] flex flex-col opacity-50">
                         <div className="text-neutral-700 text-[10px] font-semibold leading-tight text-center">
-                          Ends in
+                          {timeDifference(item?.voteEnd)
+                            ? "Ends in"
+                            : "Time Ended"}
                         </div>
                         <div className="text-neutral-700 text-sm font-semibold leading-tight text-center">
-                          13h 45m
+                          {timeDifference(item?.voteEnd)}
                         </div>
                       </div>
 

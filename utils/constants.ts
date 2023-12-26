@@ -20,14 +20,8 @@ export const proposals = [
   {
     name: "Organisation",
     title:
-      "How satisfied are you with the current decision-making processes in the organization?",
+      "Have you considered potential changes in the external environment that might affect the decision?",
     bgColor: "#FFD4B5",
-  },
-  {
-    name: "rupees",
-    title:
-      "In the next fiscal year, what should be the top priority for IT budget allocation?",
-    bgColor: "#B9EDB8",
   },
 ];
 
