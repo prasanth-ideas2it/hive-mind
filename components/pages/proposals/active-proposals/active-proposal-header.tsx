@@ -1,7 +1,7 @@
 "use client";
 
 import IconButton from "@/components/ui/icon-button";
-import { getStatusById, timeDifference } from "@/utils/helper";
+import { copyLink, getStatusById, timeDifference } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 
 const ActiveProposalHeader = ({
@@ -51,7 +51,10 @@ const ActiveProposalHeader = ({
             </div>
           </div>
           <div className="opacity-[50%] flex items-center gap-2">
-            <div className="flex items-center gap-1">
+            <div
+              onClick={() => copyLink("active-proposal", window.location.href)}
+              className="flex items-center gap-1 relative"
+            >
               <img
                 src="/assets/icons/share.svg"
                 alt="share icon"
@@ -59,6 +62,25 @@ const ActiveProposalHeader = ({
               />
               <span className="font-semibold h-[20px] cursor-pointer text-white text-sm inline-flex items-center">
                 Share
+              </span>
+              <span
+                id="past-proposal"
+                className="text-center"
+                style={{
+                  position: "absolute",
+                  display: "none",
+                  top: "-23px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  left: "1px",
+                  right: "0px",
+                  backgroundColor: "black",
+                  color: "white",
+                  borderRadius: "4px",
+                  padding: "2px 1px",
+                }}
+              >
+                Copied
               </span>
             </div>
             <img
