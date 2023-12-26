@@ -21,6 +21,7 @@ const ActiveProposal = ({ proposal, votes }: any) => {
     proposalId,
     voters,
     voteEnd,
+    state,
   } = proposal;
   const proposalInfo = JSON.parse(description);
   const [show, setShow] = useState(false);
@@ -77,7 +78,13 @@ const ActiveProposal = ({ proposal, votes }: any) => {
   };
 
   const saveVote = async (payload: any) => {
+    document.dispatchEvent(
+      new CustomEvent("show-loader", {
+        detail: true,
+      })
+    );
     const signResponse = await onSign("New Message for vote proposal");
+
     if (signResponse?.status === "success") {
       try {
         const saveVoteResponse = await castVote({
@@ -91,13 +98,24 @@ const ActiveProposal = ({ proposal, votes }: any) => {
           const res = await saveVoteResponse.json();
           console.log("voteRes", res);
           if (res.status) {
+            setIsModalOpen(false);
             toast.success("Voted Successfully");
+            document.dispatchEvent(
+              new CustomEvent("show-loader", {
+                detail: false,
+              })
+            );
             checkProposalVote(proposalId, user?.wallet as string);
             router.refresh();
           }
         }
       } catch (error) {
         toast.error("Something Went Wrong");
+        document.dispatchEvent(
+          new CustomEvent("show-loader", {
+            detail: false,
+          })
+        );
       }
     }
   };
@@ -110,6 +128,8 @@ const ActiveProposal = ({ proposal, votes }: any) => {
             title={proposalInfo?.title}
             creator={shortenHex(proposer)}
             transactionHash={shortenHex(transactionHash)}
+            voteEnd={voteEnd}
+            state={state}
           />
         </div>
         {!show ? (
@@ -180,7 +200,7 @@ const ActiveProposal = ({ proposal, votes }: any) => {
                 Close
               </button>
               <button
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => saveVote(voteData)}
                 className="text-white h-10 px-6 py-2.5 text-sm font-semibold leading-tight border border-[#CBD5E1] shadow-[0px_1px_1px_0px_#0F172A14] bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg"
               >
                 Submit

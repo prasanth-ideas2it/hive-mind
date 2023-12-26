@@ -1,11 +1,14 @@
 "use client";
 
+import { UserContext } from "@/context/user-context";
 import { getAllMyProposals } from "@/services/proposals.service";
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useContext } from "react";
 
-const MyProposalsList = ({ data }: any) => {
-  console.log("my", data);
+const MyProposalsList = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useContext(UserContext);
+  const router = useRouter();
 
   const [myProposals, setMyProposals] = useState([]);
 
@@ -18,9 +21,8 @@ const MyProposalsList = ({ data }: any) => {
   useEffect(() => {
     async function getAllMyProposals() {
       const myProposals = await getMyProposals(
-        "0x3A6D2faBDf51Af157F3fC79bb50346a615c08BF6"
+        "0x632F7BFCDa843C6F779e38ffeF8ff01761db4a16"
       );
-      console.log(myProposals?.data?.data);
       setMyProposals(myProposals?.data?.data);
     }
     getAllMyProposals();
@@ -29,7 +31,6 @@ const MyProposalsList = ({ data }: any) => {
   async function getMyProposals(account: string) {
     try {
       const result = await getAllMyProposals(account);
-      console.log(result.status);
       if (result.status == 200) {
         return {
           data: await result.json(),
@@ -46,6 +47,13 @@ const MyProposalsList = ({ data }: any) => {
     }
   }
 
+  const pastProposals = ["3", "7", "8"];
+  const activeProposals = ["1", "2", "4", "5", "6"];
+
+  const onViewProposal = (id: string) => {
+    router.push(`/proposals/${id}`);
+  };
+
   return (
     <div className="flex flex-col gap-[18px] mt-[36px]">
       <div className="flex items-center justify-between">
@@ -60,7 +68,7 @@ const MyProposalsList = ({ data }: any) => {
         </button>
       </div>
       <div className="w-full p-2.5 bg-white rounded-xl border-4 border-[#C0D7DC69] flex-col justify-start items-start gap-2.5 inline-flex">
-        {myProposals.slice(-3).map((item: any, index: number) => {
+        {myProposals?.map((item: any, index: number) => {
           const description = JSON.parse(item.description);
           return (
             <div
@@ -88,7 +96,7 @@ const MyProposalsList = ({ data }: any) => {
                     </div>
                   </div>
                   <button
-                    // onClick={onVote}
+                    onClick={() => onViewProposal(item?.proposalId)}
                     className="w-[97px] text-neutral-700 text-sm font-semibold leading-tight shadow h-10 bg-white border border-slate-300 rounded-lg flex justify-center items-center"
                   >
                     Results

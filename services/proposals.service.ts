@@ -157,3 +157,19 @@ export async function castVote(payload: any) {
     requestOptions
   );
 }
+
+export async function getManagementDecision(proposalId: string) {
+  const requestOptions: RequestInit = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  };
+
+  return await fetch(
+    `${process.env.HIVE_MIND_BASE_URL}/api//management/decision/${proposalId}`,
+    requestOptions
+  );
+}
