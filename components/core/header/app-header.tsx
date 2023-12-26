@@ -3,7 +3,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { UserContext, USERACTION_TYPES } from "@/context/user-context";
 import NavLinks from "./navlinks";
 import { magicLogout } from "@/lib/magic";
-import { shortenHex } from "@/utils/helper";
+import { copyLink, shortenHex } from "@/utils/helper";
+import copy from "copy-to-clipboard";
 
 const AppHeader = () => {
   const { user, dispatch } = useContext(UserContext);
@@ -61,13 +62,33 @@ const AppHeader = () => {
 
             <div className="w-1.5 h-1.5 left-[11px] top-[0.5px] absolute bg-orange-600 rounded-full"></div>
           </div>
-          <div className="flex items-center h-[32px] gap-1 bg-[#FFFFFF33] rounded">
-            <button className="flex items-center gap-1 bg-opacity-20 h-full px-[6px]">
+          <div className="flex items-center h-[32px] gap-1 bg-[#FFFFFF33] rounded relative">
+            <button
+              onClick={() => copyLink(user?.wallet, user?.wallet as any)}
+              className="flex items-center gap-1 bg-opacity-20 h-full px-[6px]"
+            >
               <img
                 className="h-[20px] w-[20px] bg-cover"
                 src="/assets/icons/profile.svg"
                 alt="down arrow"
               />
+              <span
+                id={user?.wallet}
+                style={{
+                  position: "absolute",
+                  display: "none",
+                  top: "35px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  right: "55px",
+                  backgroundColor: "black",
+                  color: "white",
+                  borderRadius: "4px",
+                  padding: "2px 4px 2px 4px",
+                }}
+              >
+                Copied
+              </span>
               <span className="text-xs text-white leading-6 font-[500]">
                 {/* 0x282...E8D1 */}
                 {shortenHex(user?.wallet as string)}
