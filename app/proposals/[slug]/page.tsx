@@ -104,8 +104,9 @@ const Proposal = async (props: any) => {
   const type = "active";
 
   const state = data?.data[0]?.state;
-  const pastProposals = ["3", "7", "8"];
-  const activeProposals = ["1", "2", "4", "5", "6"];
+  const pastProposals = ["2", "6", "7"];
+  const activeProposals = ["0", "1", "3", "4", "5"];
+  console.log(data);
 
   return (
     <div>

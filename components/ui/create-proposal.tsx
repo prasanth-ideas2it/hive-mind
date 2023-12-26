@@ -51,6 +51,12 @@ const CreateProposal = () => {
       value: 604800,
       // new Date().getTime() + 7 * 24 * 60 * 60 * 1000 - new Date().getTime(),
     },
+    {
+      id: 4,
+      name: "2 minutes",
+      value: 120,
+      // new Date().getTime() + 7 * 24 * 60 * 60 * 1000 - new Date().getTime(),
+    },
   ];
 
   console.log(proposalData);
